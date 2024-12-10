@@ -3,6 +3,8 @@ import Layout from "../components/Layout";
 import { MdCancel, MdLocationPin } from "react-icons/md";
 import ActionBtn from "../components/ActionBtn";
 import SuccessModal from "../components/SuccessModal";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const CreateEvent = () => {
   const [online, setOnline] = useState(false);
@@ -58,8 +60,10 @@ const CreateEvent = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  const url = "https://mbevents-goodness.onrender.com/api/v1/events";
+  const token = localStorage.getItem("mb-token");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();
 
@@ -79,6 +83,19 @@ const CreateEvent = () => {
     formDataToSend.append("image", file);
 
     // Make the API request (you can use fetch/axios here)
+    try {
+      const result = await axios.post(url, formDataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (result.status === 201) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || error?.message);
+    }
   };
 
   return (
@@ -140,6 +157,8 @@ const CreateEvent = () => {
               required
               id="title"
               type="text"
+              name="title"
+              onChange={handleChange}
               placeholder="Event Title"
               className="form-control bg-secondary-subtle py-2 shadow-none"
             />

@@ -42,7 +42,7 @@ const Footer = () => {
         <div>
           <img src={footerlogo} alt="footer logo" />
         </div>
-        <div className="row mt-4 justify-content-between">
+        <div className=" justify-content-between">
           <div className="col-lg-4">
             <p>
               Stay connected and informed with our updates Subscribe to our
